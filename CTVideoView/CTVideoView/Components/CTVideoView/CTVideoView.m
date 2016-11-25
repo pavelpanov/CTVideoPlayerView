@@ -195,7 +195,7 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
         }
 
     } else {
-        self.shouldPlayAfterPrepareFinished = YES;
+        self.shouldPlayAfterPrepareFinishedOnce = YES;
         [self prepare];
     }
 }
@@ -261,10 +261,15 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
             self.actualVideoUrlType = CTVideoViewVideoUrlTypeNative;
         }
     }
-    if (![self.asset.URL isEqual:self.actualVideoPlayingUrl]) {
-        self.asset = [AVURLAsset assetWithURL:self.actualVideoPlayingUrl];
-        self.prepareStatus = CTVideoViewPrepareStatusNotPrepared;
-        self.isVideoUrlChanged = YES;
+    
+    if (self.actualVideoUrlType == CTVideoViewVideoUrlTypeNative) {
+        if (![self.asset.URL isEqual:self.actualVideoPlayingUrl]) {
+            self.asset = [AVURLAsset assetWithURL:self.actualVideoPlayingUrl];
+            self.prepareStatus = CTVideoViewPrepareStatusNotPrepared;
+            self.isVideoUrlChanged = YES;
+        }
+    } else {
+        [self startDownloadTask];
     }
 }
 
@@ -319,7 +324,8 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
             strongSelf.playerItem = [AVPlayerItem playerItemWithAsset:asset];
             strongSelf.prepareStatus = CTVideoViewPrepareStatusPrepareFinished;
 
-            if (strongSelf.shouldPlayAfterPrepareFinished) {
+            if (strongSelf.shouldPlayAfterPrepareFinished || strongSelf.shouldPlayAfterPrepareFinishedOnce) {
+                self.shouldPlayAfterPrepareFinishedOnce = NO;
                 [strongSelf play];
             }
 
@@ -438,6 +444,7 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
     _videoUrl = videoUrl;
 
     if (self.isVideoUrlChanged) {
+        _shouldPlayAfterPrepareFinishedOnce = NO;
         [self refreshUrl];
     }
 }

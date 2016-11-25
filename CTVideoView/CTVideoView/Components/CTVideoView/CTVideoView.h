@@ -30,6 +30,7 @@
 
 @property (nonatomic, assign) BOOL isMuted; // set YES to mute the video playing
 @property (nonatomic, assign) BOOL shouldPlayAfterPrepareFinished; // default is YES
+@property (nonatomic, assign) BOOL shouldPlayAfterPrepareFinishedOnce;
 @property (nonatomic, assign) BOOL shouldReplayWhenFinish; // default is YES
 @property (nonatomic, assign) BOOL shouldChangeOrientationToFitVideo; // default is NO
 

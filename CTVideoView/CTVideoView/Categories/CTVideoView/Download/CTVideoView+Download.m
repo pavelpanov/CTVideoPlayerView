@@ -121,6 +121,8 @@ static void * CTVideoViewDownloadPrivatePropertyDownloadView;
     if ([notification.userInfo[kCTVideoManagerNotificationUserInfoKeyRemoteUrl] isEqual:self.videoUrl]) {
         
         [self refreshUrl];
+        if (self.shouldPlayAfterPrepareFinished || self.shouldPlayAfterPrepareFinishedOnce)
+            [self play];
         
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
