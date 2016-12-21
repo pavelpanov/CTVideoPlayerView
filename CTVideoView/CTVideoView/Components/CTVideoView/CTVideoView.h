@@ -33,6 +33,7 @@
 @property (nonatomic, assign) BOOL shouldPlayAfterPrepareFinishedOnce;
 @property (nonatomic, assign) BOOL shouldReplayWhenFinish; // default is YES
 @property (nonatomic, assign) BOOL shouldChangeOrientationToFitVideo; // default is NO
+@property (nonatomic, assign) BOOL needCacheBefore;
 
 @property (nonatomic, assign) CTVideoViewStalledStrategy stalledStrategy;
 @property (nonatomic, assign) CTVideoViewContentMode videoContentMode;

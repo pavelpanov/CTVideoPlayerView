@@ -149,6 +149,10 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
         return;
     }
 
+    if (self.actualVideoUrlType == CTVideoViewVideoUrlTypeRemote) {
+        [self startDownloadTask];
+    }
+
     if (self.assetToPlay) {
         self.prepareStatus = CTVideoViewPrepareStatusPreparing;
         [self asynchronouslyLoadURLAsset:self.assetToPlay];
@@ -262,14 +266,10 @@ static void * kCTVideoViewKVOContext = &kCTVideoViewKVOContext;
         }
     }
     
-    if (self.actualVideoUrlType == CTVideoViewVideoUrlTypeNative) {
-        if (![self.asset.URL isEqual:self.actualVideoPlayingUrl]) {
-            self.asset = [AVURLAsset assetWithURL:self.actualVideoPlayingUrl];
-            self.prepareStatus = CTVideoViewPrepareStatusNotPrepared;
-            self.isVideoUrlChanged = YES;
-        }
-    } else {
-        [self startDownloadTask];
+    if (![self.asset.URL isEqual:self.actualVideoPlayingUrl]) {
+        self.asset = [AVURLAsset assetWithURL:self.actualVideoPlayingUrl];
+        self.prepareStatus = CTVideoViewPrepareStatusNotPrepared;
+        self.isVideoUrlChanged = YES;
     }
 }
 
