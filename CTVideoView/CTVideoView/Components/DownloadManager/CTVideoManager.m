@@ -78,13 +78,16 @@ NSString * const kCTVideoManagerNotificationUserInfoKeyProgress = @"kCTVideoMana
     if (videoStatus == CTVideoRecordStatusDownloadFinished) {
         NSURL *nativeUrl = [self.dataCenter nativeUrlWithRemoteUrl:url];
         if (nativeUrl) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kCTVideoManagerDidFinishDownloadVideoNotification
+            if ([[NSFileManager defaultManager] fileExistsAtPath:[nativeUrl path]])
+                [[NSNotificationCenter defaultCenter] postNotificationName:kCTVideoManagerDidFinishDownloadVideoNotification
                                                                 object:nil
                                                               userInfo:@{
                                                                          kCTVideoManagerNotificationUserInfoKeyProgress:@(1.0f),
                                                                          kCTVideoManagerNotificationUserInfoKeyNativeUrl:nativeUrl,
                                                                          kCTVideoManagerNotificationUserInfoKeyRemoteUrl:url
                                                                          }];
+            else
+                [self resumeDownloadWithUrl:url];
         }
     }
     
